@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://u4savj6gk4ea"]
+
+[ext_resource type="Script" uid="uid://h1wk0y2e6lyl" path="res://movement_controls.gd" id="1_rcox4"]
+
+[node name="MovementControls" type="GridContainer" unique_id=616755065]
+offset_right = 173.0
+offset_bottom = 66.0
+columns = 3
+script = ExtResource("1_rcox4")
+
+[node name="Control" type="Control" parent="." unique_id=1061748777]
+layout_mode = 2
+
+[node name="Up" type="Button" parent="." unique_id=48741069]
+unique_name_in_owner = true
+layout_mode = 2
+text = "UP"
+
+[node name="Control2" type="Control" parent="." unique_id=854549880]
+layout_mode = 2
+
+[node name="Left" type="Button" parent="." unique_id=1700309606]
+unique_name_in_owner = true
+layout_mode = 2
+text = "LEFT"
+
+[node name="Down" type="Button" parent="." unique_id=2131240404]
+unique_name_in_owner = true
+layout_mode = 2
+text = "DOWN "
+
+[node name="Right" type="Button" parent="." unique_id=1940849728]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RIGHT"

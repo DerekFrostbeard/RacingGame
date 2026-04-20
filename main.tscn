@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://gcnw45xml0go"]
+
+[ext_resource type="PackedScene" uid="uid://cfa7ilmuvrvao" path="res://car.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://bdxuxr748tked" path="res://obstacle.gd" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://u4savj6gk4ea" path="res://movement_controls.tscn" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://bolodsplnqnqu" path="res://addons/virtual_joystick/virtual_joystick.tscn" id="4_1bvp3"]
+
+[sub_resource type="Theme" id="Theme_h2yge"]
+Button/font_sizes/font_size = 128
+
+[node name="Main" type="Node" unique_id=2147349653]
+
+[node name="Node2D" type="Node2D" parent="." unique_id=1180358620]
+
+[node name="Car" parent="Node2D" unique_id=1628522463 node_paths=PackedStringArray("movement_controls") instance=ExtResource("1_ig7tw")]
+movement_controls = NodePath("../../CanvasLayer/Control/MovementControls")
+
+[node name="Camera2D" type="Camera2D" parent="Node2D/Car" unique_id=157425439]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Node2D" unique_id=263016442 node_paths=PackedStringArray("polygon_2d", "collision_polygon_2d")]
+script = ExtResource("2_0xm2m")
+polygon_2d = NodePath("Polygon2D")
+collision_polygon_2d = NodePath("CollisionPolygon2D")
+
+[node name="Polygon2D" type="Polygon2D" parent="Node2D/StaticBody2D" unique_id=1393501959]
+polygon = PackedVector2Array(182, -93, 363, 100, 429, -67, 256, -139)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Node2D/StaticBody2D" unique_id=2057132477]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=949190170]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=789515965]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MovementControls" parent="CanvasLayer/Control" unique_id=616755065 instance=ExtResource("3_h2yge")]
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -173.0
+offset_top = -66.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+grow_vertical = 0
+theme = SubResource("Theme_h2yge")
+
+[node name="VirtualJoystick" parent="CanvasLayer/Control" unique_id=912784726 instance=ExtResource("4_1bvp3")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 177.0
+offset_top = -161.0
+offset_right = 177.0
+offset_bottom = -161.0
+grow_vertical = 0
