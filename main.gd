@@ -8,7 +8,7 @@ signal player_disconnected(peer_id)
 signal server_disconnected
 
 const PORT = 7000
-const DEFAULT_SERVER_IP = "127.0.0.1" # IPv4 localhost
+const DEFAULT_SERVER_IP = "192.168.1.58" # IPv4 localhost
 const MAX_CONNECTIONS = 20
 
 # This will contain player info for every player,
@@ -23,9 +23,12 @@ var player_info = {"name": "Name"}
 
 var players_loaded = 0
 
-
+@onready var ip_address: TextEdit = %IpAddress
+@onready var color_rect: ColorRect = %ColorRect
+@onready var label: Label = %Label
 
 func _ready():
+	print("_ready")
 	multiplayer.peer_connected.connect(_on_player_connected)
 	multiplayer.peer_disconnected.connect(_on_player_disconnected)
 	multiplayer.connected_to_server.connect(_on_connected_ok)
@@ -34,6 +37,7 @@ func _ready():
 
 
 func join_game(address = ""):
+	print("join_game")
 	if address.is_empty():
 		address = DEFAULT_SERVER_IP
 	var peer = ENetMultiplayerPeer.new()
@@ -41,9 +45,11 @@ func join_game(address = ""):
 	if error:
 		return error
 	multiplayer.multiplayer_peer = peer
+	
 
 
 func create_game():
+	print("create_game")
 	var peer = ENetMultiplayerPeer.new()
 	var error = peer.create_server(PORT, MAX_CONNECTIONS)
 	if error:
@@ -55,6 +61,7 @@ func create_game():
 
 
 func remove_multiplayer_peer():
+	print("remove_multiplayer_peer")
 	multiplayer.multiplayer_peer = OfflineMultiplayerPeer.new()
 	players.clear()
 
@@ -63,12 +70,14 @@ func remove_multiplayer_peer():
 # do Lobby.load_game.rpc(filepath)
 @rpc("call_local", "reliable")
 func load_game(game_scene_path):
+	print("load_game")
 	get_tree().change_scene_to_file(game_scene_path)
 
 
 # Every peer will call this when they have loaded the game scene.
 @rpc("any_peer", "call_local", "reliable")
 func player_loaded():
+	print("player_loaded")
 	if multiplayer.is_server():
 		players_loaded += 1
 		if players_loaded == players.size():
@@ -79,32 +88,52 @@ func player_loaded():
 # When a peer connects, send them my player info.
 # This allows transfer of all desired data for each player, not only the unique ID.
 func _on_player_connected(id):
+	print("_on_player_connected")
 	_register_player.rpc_id(id, player_info)
 
 
 @rpc("any_peer", "reliable")
 func _register_player(new_player_info):
+	print("_register_player")
 	var new_player_id = multiplayer.get_remote_sender_id()
 	players[new_player_id] = new_player_info
 	player_connected.emit(new_player_id, new_player_info)
 
 
 func _on_player_disconnected(id):
+	print("_on_player_disconnected")
 	players.erase(id)
 	player_disconnected.emit(id)
 
 
 func _on_connected_ok():
+	print("_on_connected_ok")
 	var peer_id = multiplayer.get_unique_id()
 	players[peer_id] = player_info
 	player_connected.emit(peer_id, player_info)
 
 
 func _on_connected_fail():
+	print("_on_connected_fail")
 	remove_multiplayer_peer()
 
 
 func _on_server_disconnected():
+	print("_on_server_disconnected")
 	remove_multiplayer_peer()
 	players.clear()
 	server_disconnected.emit()
+
+
+func _on_join_pressed() -> void:
+	var error = join_game(ip_address.text)
+	if error:
+		label.text = error_string(error)
+	else:
+		label.text = "OK"
+
+func _on_host_pressed() -> void:
+	create_game()
+
+func _on_color_picker_color_changed(color: Color) -> void:
+	color_rect.color = color

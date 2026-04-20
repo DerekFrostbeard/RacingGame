@@ -1,33 +1,22 @@
 [gd_scene format=3 uid="uid://gcnw45xml0go"]
 
-[ext_resource type="PackedScene" uid="uid://cfa7ilmuvrvao" path="res://car.tscn" id="1_ig7tw"]
-[ext_resource type="Script" uid="uid://bdxuxr748tked" path="res://obstacle.gd" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://5sj1pce8itkx" path="res://main.gd" id="1_lquwl"]
 [ext_resource type="PackedScene" uid="uid://u4savj6gk4ea" path="res://movement_controls.tscn" id="3_h2yge"]
 [ext_resource type="PackedScene" uid="uid://bolodsplnqnqu" path="res://addons/virtual_joystick/virtual_joystick.tscn" id="4_1bvp3"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 Button/font_sizes/font_size = 128
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_h2yge"]
+properties/0/path = NodePath("../../../ColorRect:color")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
 [node name="Main" type="Node" unique_id=2147349653]
-
-[node name="Node2D" type="Node2D" parent="." unique_id=1180358620]
-
-[node name="Car" parent="Node2D" unique_id=1628522463 node_paths=PackedStringArray("movement_controls") instance=ExtResource("1_ig7tw")]
-movement_controls = NodePath("../../CanvasLayer/Control/MovementControls")
-
-[node name="Camera2D" type="Camera2D" parent="Node2D/Car" unique_id=157425439]
-
-[node name="StaticBody2D" type="StaticBody2D" parent="Node2D" unique_id=263016442 node_paths=PackedStringArray("polygon_2d", "collision_polygon_2d")]
-script = ExtResource("2_0xm2m")
-polygon_2d = NodePath("Polygon2D")
-collision_polygon_2d = NodePath("CollisionPolygon2D")
-
-[node name="Polygon2D" type="Polygon2D" parent="Node2D/StaticBody2D" unique_id=1393501959]
-polygon = PackedVector2Array(182, -93, 363, 100, 429, -67, 256, -139)
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Node2D/StaticBody2D" unique_id=2057132477]
+script = ExtResource("1_lquwl")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=949190170]
+visible = false
 
 [node name="Control" type="Control" parent="CanvasLayer" unique_id=789515965]
 layout_mode = 3
@@ -63,3 +52,72 @@ offset_top = -161.0
 offset_right = 177.0
 offset_bottom = -161.0
 grow_vertical = 0
+
+[node name="Control" type="Control" parent="." unique_id=2039471359]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Control" unique_id=233331557]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Control/ColorRect" unique_id=719303278]
+root_path = NodePath("../../PanelContainer/VBoxContainer/ColorPicker")
+replication_config = SubResource("SceneReplicationConfig_h2yge")
+
+[node name="PanelContainer" type="PanelContainer" parent="Control" unique_id=1498292057]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -149.0
+offset_top = -200.0
+offset_right = 149.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer" unique_id=1283062150]
+layout_mode = 2
+
+[node name="Join" type="Button" parent="Control/PanelContainer/VBoxContainer" unique_id=23686739]
+layout_mode = 2
+text = "Join"
+
+[node name="IpAddress" type="TextEdit" parent="Control/PanelContainer/VBoxContainer" unique_id=61991891]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "IP address"
+scroll_fit_content_height = true
+scroll_fit_content_width = true
+
+[node name="Host" type="Button" parent="Control/PanelContainer/VBoxContainer" unique_id=1504425132]
+layout_mode = 2
+text = "Host"
+
+[node name="Label" type="Label" parent="Control/PanelContainer/VBoxContainer" unique_id=486650278]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ColorPicker" type="ColorPicker" parent="Control/PanelContainer/VBoxContainer" unique_id=44948615]
+layout_mode = 2
+sampler_visible = false
+color_modes_visible = false
+sliders_visible = false
+hex_visible = false
+presets_visible = false
+
+[connection signal="pressed" from="Control/PanelContainer/VBoxContainer/Join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="Control/PanelContainer/VBoxContainer/Host" to="." method="_on_host_pressed"]
+[connection signal="color_changed" from="Control/PanelContainer/VBoxContainer/ColorPicker" to="." method="_on_color_picker_color_changed"]

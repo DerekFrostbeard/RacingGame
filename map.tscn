@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://w05w55hemnqt"]
+
+[ext_resource type="PackedScene" uid="uid://cfa7ilmuvrvao" path="res://car.tscn" id="1_wijl4"]
+[ext_resource type="Script" uid="uid://bdxuxr748tked" path="res://obstacle.gd" id="2_e0an3"]
+
+[node name="Map" type="Node2D" unique_id=519301910]
+
+[node name="Car" parent="." unique_id=1628522463 node_paths=PackedStringArray("movement_controls") instance=ExtResource("1_wijl4")]
+movement_controls = NodePath("")
+
+[node name="Camera2D" type="Camera2D" parent="Car" unique_id=1131942623]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1531963067 node_paths=PackedStringArray("polygon_2d", "collision_polygon_2d")]
+script = ExtResource("2_e0an3")
+polygon_2d = NodePath("Polygon2D")
+collision_polygon_2d = NodePath("CollisionPolygon2D")
+
+[node name="Polygon2D" type="Polygon2D" parent="StaticBody2D" unique_id=535670996]
+polygon = PackedVector2Array(182, -93, 363, 100, 429, -67, 256, -139)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D" unique_id=753936855]
